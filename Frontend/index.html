@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Forecast - Realtime Updates</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+          font-family: 'Roboto', Arial, sans-serif;
+          background: linear-gradient(120deg, #e0eafc, #cfdef3);
+          margin: 0;
+          padding: 0;
+      }
+      .container {
+          max-width: 700px;
+          margin: 40px auto;
+          background: #fff;
+          border-radius: 16px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+          padding: 32px 24px;
+      }
+      h1 {
+          text-align: center;
+          color: #2a5298;
+          margin-bottom: 24px;
+      }
+      .forecast {
+          font-size: 1.5rem;
+          color:#333;
+          margin-top: 20px;
+          padding: 20px;
+          border-radius: 8px;
+          background: #e9f5ff;
+          min-height: 60px;
+          transition: background 0.3s ease;
+      }
+      .status {
+          text-align: center;
+          color: #888;
+          margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Weather Forecast (Realtime)</h1>
+      <div id="forecast" class="forecast">Waiting for updates...</div>
+      <div id="status" class="status"></div>
+    </div>
+    <div class="container">
+      <h1>Int (Realtime)</h1>
+      <div id="int" class="forecast">Waiting for updates...</div>
+      <div id="intStatus" class="status"></div>
+    </div>
+    <div class="container">
+      <h1>Decimal (Realtime)</h1>
+      <div id="decimal" class="forecast">Waiting for updates...</div>
+      <div id="decimalStatus" class="status"></div>
+    </div>
+    <script>
+              const forecastDiv = document.getElementById('forecast');
+              const statusDiv = document.getElementById('status');
+              const intDiv = document.getElementById('int');
+              const intStatusDiv = document.getElementById('intStatus');
+              const decimalDiv = document.getElementById('decimal');
+              const decimalStatusDiv = document.getElementById('decimalStatus');
+
+          if(!!window.EventSource)
+          {
+
+              // Forecast
+              const evtSource = new EventSource('http://localhost:5142/weatherforecast');
+              evtSource.onopen = function() {
+                  console.log('Connection to server opened.');
+                  statusDiv.textContent = "Connected.  Receiving updates.";
+              };
+
+              evtSource.onmessage = function(e){
+                  console.log('Received message:', e.data);
+                  forecastDiv.textContent = e.data;
+                  forecastDiv.style.background = "#d1f7c4";
+                  setTimeout(() => {
+                      forecastDiv.style.background = "#e9f5ff";
+                  }, 500);
+              };
+
+              evtSource.onerror = function() {
+                  console.error('EventSource failed.');
+                  statusDiv.textContent = "Connection lost. Please refresh.";
+                  forecastDiv.style.background = "#ffcccc";
+              };
+
+              // Int
+              const intEvtSource = new EventSource('http://localhost:5142/number/1');
+              intEvtSource.onopen = function() {
+                  console.log('Connection to server opened.');
+                  intStatusDiv.textContent = "Connected.  Receiving updates.";
+              };
+
+              intEvtSource.onmessage = function(e){
+                  console.log('Received message:', e.data);
+                  intDiv.textContent = e.data;
+                  intDiv.style.background = "#d1f7c4";
+                  setTimeout(() => {
+                      intDiv.style.background = "#e9f5ff";
+                  }, 500);
+              };
+
+              intEvtSource.onerror = function() {
+                  console.error('EventSource failed.');
+                  intStatusDiv.textContent = "Connection lost. Please refresh.";
+                  intDiv.style.background = "#ffcccc";
+              };
+
+              // Decimal
+              const decimalEvtSource = new EventSource('http://localhost:5142/number/2.2');
+              decimalEvtSource.onopen = function() {
+                  console.log('Connection to server opened.');
+                  statusDiv.textContent = "Connected.  Receiving updates.";
+              };
+
+              decimalEvtSource.onmessage = function(e){
+                  console.log('Received message:', e.data);
+                  decimalDiv.textContent = e.data;
+                  decimalDiv.style.background = "#d1f7c4";
+                  setTimeout(() => {
+                      decimalDiv.style.background = "#e9f5ff";
+                  }, 500);
+              };
+
+              decimalEvtSource.onerror = function() {
+                  console.error('EventSource failed.');
+                  decimalStatusDiv.textContent = "Connection lost. Please refresh.";
+                  decimalDiv.style.background = "#ffcccc";
+              };
+          }
+      else {
+          statusDiv.textContent = "Your browser does not support Server-Sent Events.";
+      }
+    </script>
+  </body>
+</html>

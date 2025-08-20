@@ -1,0 +1,1 @@
+internal sealed record NotificationEvent(Guid id, string Message);
