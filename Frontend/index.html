@@ -46,40 +46,46 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Weather Forecast (Realtime)</h1>
-      <div id="forecast" class="forecast">Waiting for updates...</div>
-      <div id="status" class="status"></div>
-    </div>
-    <div class="container">
-      <h1>Int (Realtime)</h1>
-      <div id="int" class="forecast">Waiting for updates...</div>
-      <div id="intStatus" class="status"></div>
-    </div>
-    <div class="container">
-      <h1>Decimal (Realtime)</h1>
-      <div id="decimal" class="forecast">Waiting for updates...</div>
-      <div id="decimalStatus" class="status"></div>
-    </div>
-    <script>
-              const forecastDiv = document.getElementById('forecast');
-              const statusDiv = document.getElementById('status');
-              const intDiv = document.getElementById('int');
-              const intStatusDiv = document.getElementById('intStatus');
-              const decimalDiv = document.getElementById('decimal');
-              const decimalStatusDiv = document.getElementById('decimalStatus');
+      <div class="container">
+          <h1>Weather Forecast (Realtime)</h1>
+          <div id="forecast" class="forecast">Waiting for updates...</div>
+          <div id="status" class="status"></div>
+      </div>
+      <div class="container">
+          <h1>Int (Realtime)</h1>
+          <div id="int" class="forecast">Waiting for updates...</div>
+          <div id="intStatus" class="status"></div>
+      </div>
+      <div class="container">
+          <h1>Decimal (Realtime)</h1>
+          <div id="decimal" class="forecast">Waiting for updates...</div>
+          <div id="decimalStatus" class="status"></div>
+      </div>
+      <div class="container">
+          <h1>Trigger (Realtime)</h1>
+          <div id="trgr" class="forecast">Waiting for updates...</div>
+          <div id="trgrStatus" class="status"></div>
+      </div>
+      <script>
+          const forecastDiv = document.getElementById('forecast');
+          const statusDiv = document.getElementById('status');
+          const intDiv = document.getElementById('int');
+          const intStatusDiv = document.getElementById('intStatus');
+          const decimalDiv = document.getElementById('decimal');
+          const decimalStatusDiv = document.getElementById('decimalStatus');
+          const trgrDiv = document.getElementById('trgr');
+          const trgrStatusDiv = document.getElementById('trgrStatus');
 
-          if(!!window.EventSource)
-          {
+          if (!!window.EventSource) {
 
               // Forecast
               const evtSource = new EventSource('http://localhost:5142/weatherforecast');
-              evtSource.onopen = function() {
+              evtSource.onopen = function () {
                   console.log('Connection to server opened.');
                   statusDiv.textContent = "Connected.  Receiving updates.";
               };
 
-              evtSource.onmessage = function(e){
+              evtSource.onmessage = function (e) {
                   console.log('Received message:', e.data);
                   forecastDiv.textContent = e.data;
                   forecastDiv.style.background = "#d1f7c4";
@@ -88,7 +94,7 @@
                   }, 500);
               };
 
-              evtSource.onerror = function() {
+              evtSource.onerror = function () {
                   console.error('EventSource failed.');
                   statusDiv.textContent = "Connection lost. Please refresh.";
                   forecastDiv.style.background = "#ffcccc";
@@ -96,12 +102,12 @@
 
               // Int
               const intEvtSource = new EventSource('http://localhost:5142/number/1');
-              intEvtSource.onopen = function() {
+              intEvtSource.onopen = function () {
                   console.log('Connection to server opened.');
                   intStatusDiv.textContent = "Connected.  Receiving updates.";
               };
 
-              intEvtSource.onmessage = function(e){
+              intEvtSource.onmessage = function (e) {
                   console.log('Received message:', e.data);
                   intDiv.textContent = e.data;
                   intDiv.style.background = "#d1f7c4";
@@ -110,7 +116,7 @@
                   }, 500);
               };
 
-              intEvtSource.onerror = function() {
+              intEvtSource.onerror = function () {
                   console.error('EventSource failed.');
                   intStatusDiv.textContent = "Connection lost. Please refresh.";
                   intDiv.style.background = "#ffcccc";
@@ -118,12 +124,12 @@
 
               // Decimal
               const decimalEvtSource = new EventSource('http://localhost:5142/number/2.2');
-              decimalEvtSource.onopen = function() {
+              decimalEvtSource.onopen = function () {
                   console.log('Connection to server opened.');
                   statusDiv.textContent = "Connected.  Receiving updates.";
               };
 
-              decimalEvtSource.onmessage = function(e){
+              decimalEvtSource.onmessage = function (e) {
                   console.log('Received message:', e.data);
                   decimalDiv.textContent = e.data;
                   decimalDiv.style.background = "#d1f7c4";
@@ -132,15 +138,37 @@
                   }, 500);
               };
 
-              decimalEvtSource.onerror = function() {
+              decimalEvtSource.onerror = function () {
                   console.error('EventSource failed.');
                   decimalStatusDiv.textContent = "Connection lost. Please refresh.";
                   decimalDiv.style.background = "#ffcccc";
               };
+
+              // Event Triggered
+              const eventTriggeredEvtSource = new EventSource('http://localhost:5142/events/Conshy');
+              eventTriggeredEvtSource.onopen = function () {
+                  console.log('Connection to server opened.');
+                  statusDiv.textContent = "Connected.  Receiving updates.";
+              };
+
+              eventTriggeredEvtSource.onmessage = function (e) {
+                  console.log('Received message:', e.data);
+                  trgrDiv.textContent = e.data;
+                  trgrDiv.style.background = "#d1f7c4";
+                  setTimeout(() => {
+                      decimalDiv.style.background = "#e9f5ff";
+                  }, 500);
+              };
+
+              eventTriggeredEvtSource.onerror = function () {
+                  console.error('EventSource failed.');
+                  trgrStatusDiv.textContent = "Connection lost. Please refresh.";
+                  trgrDiv.style.background = "#ffcccc";
+              };
           }
-      else {
-          statusDiv.textContent = "Your browser does not support Server-Sent Events.";
-      }
-    </script>
+          else {
+              statusDiv.textContent = "Your browser does not support Server-Sent Events.";
+          }
+      </script>
   </body>
 </html>

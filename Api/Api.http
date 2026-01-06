@@ -4,3 +4,19 @@ GET {{Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{Api_HostAddress}}/trigger-event
+Content-Type: application/json
+
+"testKey:updatedValue"
+
+###
+
+POST {{Api_HostAddress}}/trigger-event
+Content-Type: text/plain
+
+Conshy:Sunny
+
+###
+
+# Response
